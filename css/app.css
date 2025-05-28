@@ -40,7 +40,7 @@ select, button {
 }
 
 .square {
-  /* width: calc(100% / 8); */
+  /* width: calc(100% / 10); */
   aspect-ratio: 1;
   border: 2px solid black;
   display: flex;
