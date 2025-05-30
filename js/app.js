@@ -43,6 +43,7 @@ console.log('Campo Minato')
 const selectElement = document.getElementById('mode');
 const playButton = document.getElementById('play');
 const gridElement = document.querySelector('.grid');
+const messageElement = document.querySelector('.message');
 
 // playButton.addEventListener('click', () => {
 //   //logica di gioco
@@ -60,7 +61,9 @@ const startGame = () => {
   // let rows;
   // let columns;
   // let cellSize;
-  let rows, columns, cellSize; //-> come sopra
+  let rows = 10, columns = 10, cellSize, cellNumber, bombs, score = 0; //-> come sopra
+
+
   console.log(mode)
   // Determinare il numero di righe e di colonne
   switch (mode) {
@@ -78,25 +81,41 @@ const startGame = () => {
       // righe e colonne = 7
       rows = columns = 7;
       break;
-
-    default:
-      rows = columns = 10;
   }
   // Determinare il numero totale di celle da generare
-  const cellNumber = rows * columns;
+  cellNumber = rows * columns;
   cellSize = `calc( 100% / ${columns})`
+
+  bombs = generaBombe(16, 1, cellNumber);
+
   console.log(rows, columns, cellNumber);
   // Cancellare contenuto della griglia precedentemente inserita
   gridElement.innerHTML = '';
+  messageElement.innerHTML = '';
 
   // Funzione event listener della cella
-  // const cellCallback = function () {
-  //   console.log('Hai cliccato', this);
-  //   // al click, aggiungere la classe selected
-  //   this.classList.add('selected')
+  function cellCallback() {
+    console.log('Hai cliccato', this);
 
-  //   this.removeEventListener('click', cellCallback)
-  // }
+    // al click, aggiungere la classe selected
+    const element = this;
+    if (isBomb(this.innerHTML, bombs)) {
+      element.classList.add('bomb');
+
+      gameOver(score);
+    } else {
+      element.classList.add('selected');
+      score++
+
+      if (score === cellNumber - bombs.length) {
+        youWin(score);
+      }
+    }
+
+    element.removeEventListener('click', cellCallback);
+  }
+
+
 
   function gridCallback(event) {
     console.log(event.target)
@@ -122,7 +141,7 @@ const startGame = () => {
     gridElement.appendChild(cell);
 
     // Aggiungere event listener alla cella
-    // cell.addEventListener('click', cellCallback)
+    cell.addEventListener('click', cellCallback)
   }
 
 
@@ -130,3 +149,56 @@ const startGame = () => {
 
 }
 playButton.addEventListener('click', startGame);
+
+function generaBombe(numBombs, min, max) {
+
+  const arrayBombs = [];
+
+  let i = 0;
+
+  // logica che popola l'array
+  do {
+
+    i++;
+    const num = getRandomIntInclusive(min, max);
+
+    if (arrayBombs.includes(num) === false) {  // -> uguale a: !arrayBombs.includes(num)
+      arrayBombs.push(num)
+    }
+
+  } while (arrayBombs.length < numBombs);
+
+  console.log(arrayBombs, i);
+
+  return arrayBombs;
+}
+
+function isBomb(num, bombs) {
+
+  if (bombs.includes(parseInt(num))) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function gameOver(score) {
+
+  // console.log();
+
+  messageElement.innerHTML = `Hai perso! Hai totalizzato ${score} punti.`;
+}
+
+function youWin(score) {
+
+  // console.log();
+  messageElement.innerHTML = `Congratulazioni! Hai vinto con ${score} punti.`;
+}
+
+function resetCells(arrayCells)
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}

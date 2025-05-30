@@ -17,6 +17,17 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  position: relative;
+  padding: 40px 0;
+}
+
+
+.message {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  width: 100%;
+  text-align: center;
 }
 
 header .selectors {
