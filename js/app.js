@@ -89,14 +89,22 @@ const startGame = () => {
   // Cancellare contenuto della griglia precedentemente inserita
   gridElement.innerHTML = '';
 
-  const cellCallback = function () {
-    console.log('Hai cliccato', this);
-    // al click, aggiungere la classe selected
-    this.classList.add('selected')
+  // Funzione event listener della cella
+  // const cellCallback = function () {
+  //   console.log('Hai cliccato', this);
+  //   // al click, aggiungere la classe selected
+  //   this.classList.add('selected')
 
-    this.removeEventListener('click', cellCallback)
+  //   this.removeEventListener('click', cellCallback)
+  // }
 
+  function gridCallback(event) {
+    console.log(event.target)
+    const element = event.target
+    element.classList.add('selected')
   }
+  gridElement.addEventListener('click', gridCallback)
+
 
   // Generare la griglia
 
@@ -114,7 +122,7 @@ const startGame = () => {
     gridElement.appendChild(cell);
 
     // Aggiungere event listener alla cella
-    cell.addEventListener('click', cellCallback)
+    // cell.addEventListener('click', cellCallback)
   }
 
 
